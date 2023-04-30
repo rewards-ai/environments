@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "rewards-envs"
+version = "0.0.1"
+description = "A custom environment creation engine for rewards.ai"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "rewards_envs"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+torch = "^2.0.0"
+gymnasium = "^0.28.1"
+pandas = "^1.5.3"
+opencv-python = "^4.7.0.72"
+pygame = "^2.3.0"
+Flask = "^2.2.3"
+fastapi = "^0.95.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
