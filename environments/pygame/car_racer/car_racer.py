@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Tuple
 
 class Config(BaseModel):
-    image_raw: str = "car_racer/car.png"
+    image_raw: str = "assets/car.png"
     center: Tuple[float, float] = Field(default=(200, 50), description="The center of the image")
     velocity_vector: Tuple[float, float] = Field(default=(0.8, 0), description="The velocity vector of the object")
     rotation_velocity: float = Field(default=15, description="The rotation velocity of the object")
@@ -120,7 +120,7 @@ class Car():
 
 class CarRacer:
     def __init__(self, screen, agent: Car = Car(), is_human: bool = False) -> None:
-        self.track = pygame.image.load(Path(__file__).parent.joinpath("car_racer/training/track-2.png"))
+        self.track = pygame.image.load(Path(__file__).parent.joinpath("assets/training/track-2.png"))
         self.agent = agent
         self.screen = screen
         self.iterations = 0
@@ -138,7 +138,7 @@ class CarRacer:
         self.iterations = 0
         self.agent.reset()
     
-    def step(self, action: list = [0, 0, 0, 0, 0, 0]) -> tuple(bool, list):
+    def step(self, action: list = [0, 0, 0, 0, 0, 0]):
         if self.is_human:
             action = self._human_mode()
         self.agent.step(action, self.screen)
