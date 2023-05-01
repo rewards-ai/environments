@@ -15,7 +15,7 @@ This installs our latest version. Current version of rewards_envs provides a sin
 In order to build our custom environment, you have to simply write these few lines of code.
 
 ```python
-from rewards_envs import CarConfig, CarGame
+from rewards.environments import CarConfig, CarGame
 
 # First create the configurations to create the environment 
 # configurations helps to maintain multiple experiments 
@@ -60,13 +60,9 @@ def reward_function(props) -> int:
 The agent (here the car) has some following properties named under the dictionary `props`. Here the name and the explaination of all the properties.
 
 - `is_alive` : This states, whether the car is alive or not
-  
 - `observation` : Observation is a array of 5 float values, which are the radars of the car.
-  
 - `direction` : Direction provides the current action taken by the car.
-  
 - `rotational_velocity` : The rotational velocity of the car.
-  
 
 The properties of the car are determined during the process of creation of the game. If you want to create a custom environment, then you can define your agent's properties there. The propeties must be those, which determines whether or how much an agent is gonna win/loose the game.
 
