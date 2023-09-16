@@ -19,4 +19,5 @@ setup.py
 rewards_envs/__pycache__
 rewards_envs/engines/pygame/car_race/__pycache__
 .rewards-envs
-./__pycache__
+**/__pycache__
+__pycache__
