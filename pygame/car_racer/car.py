@@ -15,6 +15,8 @@ class Car():
     def __init__(
             self,
             id: str,
+            angle,
+            center,
             radar_nums: Optional[int] = 5, 
             show_radar: Optional[bool] = False,
             color: Optional[Tuple[int, int, int]] = None
@@ -32,10 +34,11 @@ class Car():
         self.show_radar = show_radar
         self.radar_angles = np.linspace(-90, 90, self.radar_nums)
         
+        self.initial_angle = angle
+        self.initial_center = center
+        
         self.image_raw = "assets/car.png"
-        self.velocity_vector = (0.8, 0)
-        self.rotation_velocity = 15
-        self.center = (200, random.randint(15, 85))
+        self.initital_rotation_velocity = 15
         self.move_factor = 12
         
         self.image_raw = pygame.image.load(Path(__file__).parent.joinpath(self.image_raw))
@@ -47,17 +50,18 @@ class Car():
     def reset(self) -> None:
         """Reset the Car back to the starting position. Reset other car variables too.
         """
-        self.angle = 0
+        self.angle = self.initial_angle
+        randians = math.radians(self.angle)
         self.reward = 0
-        self.rotation_velocity = 15
-        self.velocity_vector = (0.8, 0)
-        self.center = (200, random.randint(15, 85))
+        
+        self.velocity_vector = (math.cos(randians), - math.sin(randians))
+        self.center = self.initial_center
         
         self.image = pygame.transform.rotozoom(self.image_raw, self.angle, 0.1)
         self.rect = self.image.get_rect(center=self.center)
         
         self.velocity_vector = pygame.math.Vector2(self.velocity_vector)
-        self.rotation_vel = self.rotation_velocity
+        self.rotation_velocity = self.initital_rotation_velocity
         
         self.radar_locations = [self.rect.center] * self.radar_nums
         
@@ -158,11 +162,11 @@ class Car():
         """Rotates Car's pygame.Rect by an angle based on direction
         """
         if self.direction == 1:
-            self.angle -= self.rotation_vel
-            self.velocity_vector.rotate_ip(self.rotation_vel)
+            self.angle -= self.rotation_velocity
+            self.velocity_vector.rotate_ip(self.rotation_velocity)
         if self.direction == -1:
-            self.angle += self.rotation_vel
-            self.velocity_vector.rotate_ip(-self.rotation_vel)
+            self.angle += self.rotation_velocity
+            self.velocity_vector.rotate_ip(-self.rotation_velocity)
             
         self.image = pygame.transform.rotozoom(self.image_raw, self.angle, 0.1)
         self.rect = self.image.get_rect(center=self.rect.center)
@@ -208,13 +212,13 @@ class Car():
             self.direction = 0
         # elif action[3] == 1:
         #     self.velocity_vector.scale_to_length(0.8)
-        #     self.rotation_vel = 15
+        #     self.rotation_velocity = 15
         # elif action[4] == 1:
         #     self.velocity_vector.scale_to_length(1.2)
-        #     self.rotation_vel = 10
+        #     self.rotation_velocity = 10
         # elif action[5] == 1:
         #     self.velocity_vector.scale_to_length(1.6)
-        #     self.rotation_vel = 7
+        #     self.rotation_velocity = 7
         else:
             self.direction = 0
             

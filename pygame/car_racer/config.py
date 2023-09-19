@@ -1,12 +1,13 @@
-from pydantic import BaseModel, Field, validator
-from typing import Tuple, List, Callable, Optional
+from pydantic import BaseModel, validator
+from typing import Tuple, List, Callable, Optional, Any
 from .car import Car
+from .track import Track
 from pathlib import Path
 
 class CarRacerConfig(BaseModel):
     agents: List
     reward_function: Callable[[dict], int]
-    track_num: Optional[int] = 1
+    track: Optional[Any]
     is_human: Optional[bool] = False
     display_mode: Optional[str] = "window"
     window_size: Optional[Tuple[int, int]] = (800, 700)
@@ -34,17 +35,6 @@ class CarRacerConfig(BaseModel):
     def validate_display_mode(cls, value):
         if value not in ["window", "surface"]:
             raise ValueError("\ndisplay_mode can be 'window' or 'surface'. For more info read docs.")
-        return value
-        
-    @validator('track_num')
-    def validate_track_num(cls, value) -> int:
-        tracks_path = Path(__file__).parent.joinpath("assets/training")
-        tracks_num = len([file_path for file_path in tracks_path.iterdir()])
-        
-        if value < 1:
-            raise ValueError("\ntrack variable uses '1-based indexing'")
-        elif value > tracks_num:
-            raise ValueError(f"\nOnly {tracks_num} tracks available.")
         return value
     
     def __init__(self, **args):

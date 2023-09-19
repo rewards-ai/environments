@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.interpolate import splprep, splev
+import math
 import random
 from typing import Tuple
 import pygame
@@ -83,17 +84,26 @@ class Track():
         sorted_points = self._sort_points_by_angle(random_points.tolist())
         
         sampled_points = self._get_closed_path(sorted_points, num_samples=100)
+        # self.points_100 = np.array(list(reversed(sampled_points)))
         self.points_100 = np.array(sampled_points)
         
         sampled_points = self._get_closed_path(sorted_points, num_samples=1000)
         self.points_1000 = np.array(sampled_points)
         
+        self.start_point = tuple(self.points_100[0])
+        angle_radians = math.atan2(
+            self.points_100[1][1] - self.points_100[0][1], 
+            self.points_100[0][0] - self.points_100[1][0]
+        )
+        angle_degrees = math.degrees(angle_radians)
+        self.direction = angle_degrees + 180
         self.direction_vector = [
             tuple(self.points_100[0]),
             tuple(self.points_100[1])
         ]
+        
     def display(self, screen):
-        screen.fill((150, 255, 120))
+        screen.fill((173, 255, 133))
         for x, y in self.points_1000:
             pygame.draw.circle(screen, (0, 0, 0), (x, y), 26)
             
@@ -103,5 +113,5 @@ class Track():
         for x, y in self.points_100:
             pygame.draw.circle(screen, (0, 0, 0), (x, y), 2)
             
-        pygame.draw.circle(screen, (150, 255, 50), self.direction_vector[0], 5)
-        pygame.draw.circle(screen, (150, 255, 00), self.direction_vector[1], 5)
+        pygame.draw.circle(screen, (0, 255, 0), self.direction_vector[0], 5)
+        pygame.draw.line(screen, (0, 0, 0), self.direction_vector[0], self.direction_vector[1], 1)

@@ -1,7 +1,6 @@
-from typing import List, Optional, Tuple, Callable
 import numpy as np
-from pathlib import Path
 import pygame
+import math
 from .config import CarRacerConfig
 
 # TODO:
@@ -17,7 +16,6 @@ class CarRacer:
         """
         self._extract_config(config)
         
-        self.track = self._get_track()
         self.screen = self._get_screen()
         
         self.iterations = 0
@@ -34,9 +32,9 @@ class CarRacer:
         self.require_pixel = config.require_pixel
         self.display_mode = config.display_mode
         self.window_size = config.window_size
-        self.track_num = config.track_num
         self.is_human = config.is_human
         self.agents = config.agents
+        self.track = config.track
         self.FPS = config.FPS
             
     def _is_quitting(self) -> None:
@@ -77,7 +75,7 @@ class CarRacer:
     def _draw(self) -> None:
         """Draws the track and all the car agents onto the pygame screen
         """
-        self.screen.blit(self.track, (0, 0))
+        self.track.display(self.screen)
         for i, agent in enumerate(self.agents): 
             if not agent.isDisabled:
                 agent._draw(i, self.screen)
@@ -124,18 +122,6 @@ class CarRacer:
         """
         state = self.agents[i].radars
         return np.array(state, dtype=int)
-
-    def _get_track(self):
-        """Loads path of the track image based on 'track_num' and returns image as pygame image
-
-        Returns:
-            track: pygame image of track
-        """
-        parent_path = Path(__file__).parent
-        track_path = parent_path.joinpath(f"assets/training/track-{self.track_num}.png")
-        track = pygame.image.load(track_path)
-
-        return track
 
     def _get_screen(self):
         """Returns the screen to blit/render the environment and agents, based on 'display_mode'
